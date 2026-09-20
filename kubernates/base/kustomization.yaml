@@ -10,9 +10,9 @@ namespace: stock
 # (dekho base/db-secret.yaml ke comments), taake real RDS password kabhi
 # git mein commit na ho.
 resources:
-  - namespace.yaml # Jo sabse pehle banayi thi
+  - namespace.yaml
   - flaskdeployment.yaml
   - flaskservice.yaml
-
+  - ingress.yaml
 commonLabels:
   app: stockflow-stack
