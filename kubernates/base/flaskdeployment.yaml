@@ -1,0 +1,39 @@
+apiVersion: apps/v1        # 1. 'appVersion' ko 'apiVersion' kiya aur apps/v1 lagaya
+kind: Deployment
+metadata: 
+  name: flaskdeployement
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: flask
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec: 
+      containers:
+        - name: flask-app
+          image: shahiddevops1/flask-todo-app:latest # 2. Image ka tag ':latest' lagana behtar hota hai
+          ports:
+            - containerPort: 5000                   # 3. 'containersport' ko 'containerPort' kiya (P aur C capital/small sahi kiya)
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:                       # 4. 'Secectkeyref' ki spelling mistake ko 'secretKeyRef' kiya aur correct space di
+                  name: db-secret                   # 5. Har line ke aage extra spacing (indentation) theek ki
+                  key: db-password
+            
+            # Database URL
+            - name: DATABASE_URL
+              value: "postgresql://postgres:$(DB_PASSWORD)@db-service:5432/stockflow"
+            
+            # Baqi ke env variables
+            - name: SECRET_KEY
+              value: "dev-secret-key-change-me"
+            - name: SEED_ON_START
+              value: "true"
+            - name: ADMIN_EMAIL
+              value: "admin@stockflow.local"
+            - name: ADMIN_PASSWORD
+              value: "Admin@12345"

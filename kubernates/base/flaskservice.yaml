@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+spec:
+  selector:
+    app: flask        # 👈 Yeh aapke Deployment ke label se match hona zaroori tha
+  ports:
+    - protocol: TCP
+      port: 5000        # Jis port par internal traffic aayega
+      targetPort: 5000  # Container ka port
+      nodePort: 30007   # Browser mein open karne ke liye static port (30000-32767 range)
+  type: NodePort        # Isse aap cluster ke bahar (browser) se access kar payenge

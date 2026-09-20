@@ -12,6 +12,8 @@ resources:
   - db-secret.yaml
   - mysql-deployment.yaml
   - mysql-service.yaml
+  - flaskdeployment.yaml
+  - flaskservice.yaml
 
 commonLabels:
   app: mysql-stack
