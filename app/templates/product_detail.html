@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% from "_macros.html" import product_image %}
+{% block title %}{{ product.name }} - StockFlow{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('products.product_list') }}" class="text-decoration-none">&larr; Back to products</a>
+
+<div class="row g-4 mt-1">
+  <div class="col-md-6">
+    {{ product_image(product, 'product-detail-img shadow-sm') }}
+  </div>
+  <div class="col-md-6">
+    {% if product.category %}
+    <a class="badge text-bg-secondary text-decoration-none mb-2"
+       href="{{ url_for('products.product_list', category=product.category.id) }}">{{ product.category.name }}</a>
+    {% endif %}
+    <h1 class="h2">{{ product.name }}</h1>
+    <p class="fs-3 fw-bold">{{ product.price|money }}</p>
+
+    <p class="description">{{ product.description or 'No description available.' }}</p>
+
+    {% if product.stock_quantity > 5 %}
+    <p class="text-success">In stock ({{ product.stock_quantity }} available)</p>
+    {% elif product.stock_quantity > 0 %}
+    <p class="text-warning">Only {{ product.stock_quantity }} left!</p>
+    {% else %}
+    <p class="text-danger">Out of stock</p>
+    {% endif %}
+
+    {% if product.stock_quantity > 0 %}
+    <form method="post" action="{{ url_for('cart.add_to_cart', product_id=product.id) }}" class="d-flex gap-2" style="max-width: 320px;">
+      {{ csrf_input() }}
+      <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ product.stock_quantity }}" aria-label="Quantity">
+      <button type="submit" class="btn btn-primary flex-shrink-0">Add to cart</button>
+    </form>
+    {% if not current_user.is_authenticated %}
+    <p class="text-muted small mt-2">You need to log in or sign up to add items to your cart.</p>
+    {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

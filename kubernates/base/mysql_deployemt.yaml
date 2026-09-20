@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+              name: mysql
+          env:
+            # 1. Database ka naam (Aapki compose file ke mutabik)
+            - name: MYSQL_DATABASE
+              value: "stockflow"
+            
+            # 2. Base user (Aapki compose file ke mutabik: postgres ko as user use kar rahe hain)
+            - name: MYSQL_USER
+              value: "postgres"
+            
+            # 3. Wahi single password jo Secret se aayega
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-password
+            
+            # MySQL mein user password ke sath Root password dena bhi zaroori hota hai
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-password
+          volumeMounts:
+            # Container ke andar ka folder jahan MySQL data save karta hai
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+      volumes:
+        # Aapka purana Hard Disk wala PVC yahan connect ho gaya
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mylocalpvc

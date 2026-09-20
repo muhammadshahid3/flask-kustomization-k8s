@@ -1,0 +1,5 @@
+{% macro product_image(product, css_class='') %}
+<img src="{{ product.image_url or url_for('static', filename='img/placeholder.svg') }}"
+     alt="{{ product.name }}" class="{{ css_class }}" loading="lazy"
+     onerror="this.onerror=null;this.src='{{ url_for('static', filename='img/placeholder.svg') }}';">
+{% endmacro %}

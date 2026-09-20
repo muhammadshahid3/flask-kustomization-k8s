@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Categories - Admin{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-3">Categories</h1>
+{% include "admin/_nav.html" %}
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <form method="post" action="{{ url_for('admin.add_category') }}" class="row g-2">
+      {{ csrf_input() }}
+      <div class="col-sm-8 col-md-9">
+        <input type="text" name="name" class="form-control" placeholder="New category name" required maxlength="100" aria-label="New category name">
+      </div>
+      <div class="col-sm-4 col-md-3 d-grid">
+        <button type="submit" class="btn btn-primary">Add category</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% if categories %}
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>ID</th><th>Name (edit and press Save)</th><th>Products</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for c in categories %}
+        <tr>
+          <td>{{ c.id }}</td>
+          <td>
+            <form method="post" action="{{ url_for('admin.edit_category', category_id=c.id) }}" class="d-flex gap-2">
+              {{ csrf_input() }}
+              <input type="text" name="name" class="form-control form-control-sm" value="{{ c.name }}" required maxlength="100" aria-label="Category name">
+              <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
+            </form>
+          </td>
+          <td>{{ c.products|length }}</td>
+          <td class="text-end">
+            <form method="post" action="{{ url_for('admin.delete_category', category_id=c.id) }}"
+                  data-confirm="Delete category '{{ c.name }}'? Its products will become uncategorized.">
+              {{ csrf_input() }}
+              <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<p class="text-muted">No categories yet. Add your first one above.</p>
+{% endif %}
+{% endblock %}

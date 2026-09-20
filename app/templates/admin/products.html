@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "_macros.html" import product_image %}
+{% block title %}Products - Admin{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3 mb-0">Products</h1>
+  <a class="btn btn-primary" href="{{ url_for('admin.add_product') }}">Add product</a>
+</div>
+{% include "admin/_nav.html" %}
+
+{% if products %}
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>ID</th><th></th><th>Name</th><th>Category</th><th class="text-end">Price</th><th class="text-center">Stock</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ product_image(p, 'cart-thumb') }}</td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.category.name if p.category else 'Uncategorized' }}</td>
+          <td class="text-end">{{ p.price|money }}</td>
+          <td class="text-center">
+            <span class="badge {{ 'text-bg-danger' if p.stock_quantity == 0 else ('text-bg-warning' if p.stock_quantity <= 5 else 'text-bg-success') }}">{{ p.stock_quantity }}</span>
+          </td>
+          <td class="text-end text-nowrap">
+            <a class="btn btn-outline-primary btn-sm" href="{{ url_for('admin.edit_product', product_id=p.id) }}">Edit</a>
+            <form method="post" action="{{ url_for('admin.delete_product', product_id=p.id) }}" class="d-inline"
+                  data-confirm="Delete product '{{ p.name }}'? This cannot be undone.">
+              {{ csrf_input() }}
+              <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<p class="text-muted">No products yet.</p>
+{% endif %}
+{% endblock %}

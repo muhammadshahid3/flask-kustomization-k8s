@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service
+spec:
+  selector:
+    app: db  # Yeh aapke MySQL Deployment ke label se match karta hai
+  ports:
+    - protocol: TCP
+      port: 3306        # Jis port par Flask connect karega
+      targetPort: 3306  # Container ka asli port
+  type: ClusterIP      # Isse database sirf cluster ke andar hi accessible rahega (Secure)

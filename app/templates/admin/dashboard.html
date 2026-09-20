@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - StockFlow{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-3">Admin Dashboard</h1>
+{% include "admin/_nav.html" %}
+
+<div class="row row-cols-2 row-cols-lg-4 g-3 mb-4">
+  <div class="col"><div class="card text-center shadow-sm"><div class="card-body">
+    <div class="display-6">{{ stats.products }}</div><div class="text-muted">Products</div>
+  </div></div></div>
+  <div class="col"><div class="card text-center shadow-sm"><div class="card-body">
+    <div class="display-6">{{ stats.categories }}</div><div class="text-muted">Categories</div>
+  </div></div></div>
+  <div class="col"><div class="card text-center shadow-sm"><div class="card-body">
+    <div class="display-6">{{ stats.customers }}</div><div class="text-muted">Customers</div>
+  </div></div></div>
+  <div class="col"><div class="card text-center shadow-sm"><div class="card-body">
+    <div class="display-6">{{ stats.orders }}</div><div class="text-muted">Orders</div>
+  </div></div></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h5">Quick actions</h2>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-primary" href="{{ url_for('admin.add_product') }}">Add product</a>
+          <a class="btn btn-outline-primary" href="{{ url_for('admin.products') }}">Manage products</a>
+          <a class="btn btn-outline-primary" href="{{ url_for('admin.categories') }}">Manage categories</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h5">Low stock (5 or fewer)</h2>
+        {% if low_stock %}
+        <ul class="list-group list-group-flush">
+          {% for p in low_stock %}
+          <li class="list-group-item px-0 d-flex justify-content-between">
+            <a class="text-decoration-none" href="{{ url_for('admin.edit_product', product_id=p.id) }}">{{ p.name }}</a>
+            <span class="badge {{ 'text-bg-danger' if p.stock_quantity == 0 else 'text-bg-warning' }}">{{ p.stock_quantity }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted mb-0">All products are well stocked.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

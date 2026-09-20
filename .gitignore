@@ -1,0 +1,10 @@
+# Secrets - never commit the real .env
+.env
+
+__pycache__/
+*.pyc
+venv/
+.venv/
+.idea/
+.vscode/
+*.log

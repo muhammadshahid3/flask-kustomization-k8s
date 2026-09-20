@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Admin Login' if admin_login else 'Login' }} - StockFlow{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h3 mb-3">{{ 'Admin Login' if admin_login else 'Login' }}</h1>
+
+        <form method="post"
+              action="{{ url_for('auth.admin_login' if admin_login else 'auth.login', next=request.args.get('next')) }}">
+          {{ csrf_input() }}
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required autofocus
+                   value="{{ request.form.get('email', '') }}">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            {{ 'Log in as admin' if admin_login else 'Log in' }}
+          </button>
+        </form>
+
+        {% if not admin_login %}
+        <p class="text-center text-muted mt-3 mb-0">
+          New here? <a href="{{ url_for('auth.signup', next=request.args.get('next')) }}">Create an account</a>
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

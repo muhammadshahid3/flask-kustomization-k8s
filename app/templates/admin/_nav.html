@@ -1,0 +1,11 @@
+<ul class="nav nav-pills mb-4">
+  <li class="nav-item">
+    <a class="nav-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}" href="{{ url_for('admin.dashboard') }}">Dashboard</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.endpoint == 'admin.categories' %}active{% endif %}" href="{{ url_for('admin.categories') }}">Categories</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if request.endpoint in ('admin.products', 'admin.add_product', 'admin.edit_product') %}active{% endif %}" href="{{ url_for('admin.products') }}">Products</a>
+  </li>
+</ul>

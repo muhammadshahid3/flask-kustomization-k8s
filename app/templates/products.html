@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% from "_macros.html" import product_image %}
+{% block title %}Products - StockFlow{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-3">Products</h1>
+
+<form class="row g-2 mb-4" method="get" action="{{ url_for('products.product_list') }}">
+  <div class="col-md-6">
+    <input type="search" name="q" class="form-control" placeholder="Search products by name" value="{{ q }}">
+  </div>
+  <div class="col-md-4">
+    <select name="category" class="form-select" aria-label="Filter by category">
+      <option value="">All categories</option>
+      {% for c in categories %}
+      <option value="{{ c.id }}" {% if c.id == selected_category %}selected{% endif %}>{{ c.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2 d-grid">
+    <button type="submit" class="btn btn-primary">Search</button>
+  </div>
+</form>
+
+{% if products %}
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3">
+  {% for p in products %}
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <a href="{{ url_for('products.product_detail', product_id=p.id) }}">
+        {{ product_image(p, 'card-img-top product-img') }}
+      </a>
+      <div class="card-body d-flex flex-column">
+        {% if p.category %}
+        <span class="badge text-bg-secondary align-self-start mb-2">{{ p.category.name }}</span>
+        {% endif %}
+        <h2 class="h6 card-title">
+          <a class="text-decoration-none text-dark" href="{{ url_for('products.product_detail', product_id=p.id) }}">{{ p.name }}</a>
+        </h2>
+        <p class="fw-bold fs-5 mb-1">{{ p.price|money }}</p>
+        {% if p.stock_quantity > 5 %}
+        <p class="text-success small">In stock</p>
+        {% elif p.stock_quantity > 0 %}
+        <p class="text-warning small">Only {{ p.stock_quantity }} left</p>
+        {% else %}
+        <p class="text-danger small">Out of stock</p>
+        {% endif %}
+
+        <div class="mt-auto d-flex gap-2">
+          <a class="btn btn-outline-secondary btn-sm flex-fill" href="{{ url_for('products.product_detail', product_id=p.id) }}">Details</a>
+          <form method="post" action="{{ url_for('cart.add_to_cart', product_id=p.id) }}" class="flex-fill d-grid">
+            {{ csrf_input() }}
+            <button type="submit" class="btn btn-primary btn-sm" {% if p.stock_quantity < 1 %}disabled{% endif %}>Add to cart</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center text-muted py-5">
+  <p class="mb-2">No products found.</p>
+  {% if q or selected_category %}
+  <a href="{{ url_for('products.product_list') }}">Clear search and filters</a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}

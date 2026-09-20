@@ -1,0 +1,4 @@
+Single-database configuration for Flask (Flask-Migrate / Alembic).
+
+This folder is created by `flask db init` and is committed to the repository.
+Do not re-run `flask db init` - use `flask db migrate` and `flask db upgrade`.
