@@ -10,5 +10,6 @@ spec:
     storage: 2Gi
   accessModes:
     - ReadWriteOnce
-  hostPath: 
+  hostPath:
     path: "/mnt/data"
+    type: DirectoryOrCreate

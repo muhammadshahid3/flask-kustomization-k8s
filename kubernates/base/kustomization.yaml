@@ -9,8 +9,8 @@ resources:
   - namespace.yaml # Jo sabse pehle banayi thi
   - pv.yaml
   - pvc.yaml
-  - mysql-secret
-  - mysql_deployment.yaml
+  - db-secret.yaml
+  - mysql-deployment.yaml
   - mysql-service.yaml
 
 commonLabels:
