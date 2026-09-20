@@ -1,33 +1,49 @@
-apiVersion: apps/v1        # 1. 'appVersion' ko 'apiVersion' kiya aur apps/v1 lagaya
+apiVersion: apps/v1
 kind: Deployment
-metadata: 
+metadata:
   name: flaskdeployement
 spec:
   replicas: 1
-  selector: 
+  selector:
     matchLabels:
       app: flask
   template:
     metadata:
       labels:
         app: flask
-    spec: 
+    spec:
       containers:
         - name: flask-app
-          image: shahiddevops1/flask-todo-app:latest # 2. Image ka tag ':latest' lagana behtar hota hai
+          image: shahiddevops1/flask-todo-app:latest
           ports:
-            - containerPort: 5000                   # 3. 'containersport' ko 'containerPort' kiya (P aur C capital/small sahi kiya)
+            - containerPort: 5000
           env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-host
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-user
             - name: DB_PASSWORD
               valueFrom:
-                secretKeyRef:                       # 4. 'Secectkeyref' ki spelling mistake ko 'secretKeyRef' kiya aur correct space di
-                  name: db-secret                   # 5. Har line ke aage extra spacing (indentation) theek ki
+                secretKeyRef:
+                  name: db-secret
                   key: db-password
-            
-            # Database URL
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: db-name
+
+            # Postgres (RDS) connection string — mysql:// se postgresql:// wapas kiya,
+            # aur db-service (local pod) ki jagah ab RDS host use ho raha hai
             - name: DATABASE_URL
-              value: "postgresql://postgres:$(DB_PASSWORD)@db-service:5432/stockflow"
-            
+              value: "postgresql://$(DB_USER):$(DB_PASSWORD)@$(DB_HOST):5432/$(DB_NAME)"
+
             # Baqi ke env variables
             - name: SECRET_KEY
               value: "dev-secret-key-change-me"

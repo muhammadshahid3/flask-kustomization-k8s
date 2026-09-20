@@ -5,15 +5,14 @@ kind: Kustomization
 namespace: stock
 
 # 2. Files ki list (Isme humne namespace ki file bhi jod di hai)
+# db-secret.yaml resources mein SHAMIL NAHI kiya — woh khaali template hai.
+# Asal secret `kubectl create secret ...` command se manually banega
+# (dekho base/db-secret.yaml ke comments), taake real RDS password kabhi
+# git mein commit na ho.
 resources:
   - namespace.yaml # Jo sabse pehle banayi thi
-  - pv.yaml
-  - pvc.yaml
-  - db-secret.yaml
-  - mysql-deployment.yaml
-  - mysql-service.yaml
   - flaskdeployment.yaml
   - flaskservice.yaml
 
 commonLabels:
-  app: mysql-stack
+  app: stockflow-stack
