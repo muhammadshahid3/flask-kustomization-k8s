@@ -1,10 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+# Yeh line bina kuch badle base ke saare code ko utha legi
 resources:
-  - namespace.yaml
-  - pv.yaml
-  - pvc.yaml
-  - db-secret.yaml
-  - mysql-deployment.yaml
-  - mysql-service.yaml
+  - ../../base
+
